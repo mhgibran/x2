@@ -25,7 +25,7 @@ export default function Footer() {
   ];
 
   return (
-    <ul className="flex flex-wrap justify-center space-x-4 mb-4">
+    <ul className="flex flex-wrap justify-center space-x-4 px-2 mb-4">
       {footers &&
         footers.map((item, index) => {
           return (
