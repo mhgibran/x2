@@ -6,7 +6,7 @@ export default function CloseModal(props) {
     <div className="absolute left-4 top-3">
       <button
         type="button"
-        className="bg-transparent text-black text-3xl"
+        className="bg-transparent text-3xl text-black"
         onClick={closeModal}
       >
         <HiMiniXMark />

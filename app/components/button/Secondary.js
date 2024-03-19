@@ -3,7 +3,7 @@ export default function SecondaryButton({ htmlAttributes, text }) {
     <button
       type="button"
       {...htmlAttributes}
-      className={`border border-gray-500 hover:bg-gray-50 rounded-full shadow-md text-black text-center ${htmlAttributes.className}`}
+      className={`rounded-full border border-gray-500 text-center text-black shadow-md hover:bg-gray-50 ${htmlAttributes.className}`}
     >
       {text}
     </button>

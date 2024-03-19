@@ -25,14 +25,14 @@ export default function Footer() {
   ];
 
   return (
-    <ul className="flex flex-wrap justify-center space-x-4 px-2 mb-4">
+    <ul className="mb-4 flex flex-wrap justify-center space-x-4 px-2">
       {footers &&
         footers.map((item, index) => {
           return (
             <li key={index}>
               <Link
                 href="/"
-                className="text-gray-800 text-[12px] hover:underline"
+                className="text-[12px] text-gray-800 hover:underline"
               >
                 {item}
               </Link>

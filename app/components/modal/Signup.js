@@ -1,14 +1,17 @@
 "use client";
 import Image from "next/image";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import PrimaryButton from "../button/Primary";
 import CloseModal from "../button/CloseModal";
 
 const Signup = () => {
   const [isOpen, setIsOpen] = useState(false);
-  const [month, setMonth] = useState({ id: null, name: null, days: 31 });
-  const [day, setDay] = useState(null);
-  const [year, setYear] = useState(null);
+  const [name, setName] = useState("");
+  const [email, setEmail] = useState("");
+  const [month, setMonth] = useState({ id: "", name: "", days: 31 });
+  const [day, setDay] = useState("");
+  const [year, setYear] = useState("");
+  const [invalidForm, setInvalidForm] = useState(true);
   const months = [
     {
       id: 1,
@@ -80,6 +83,14 @@ const Signup = () => {
     setIsOpen(false);
   };
 
+  const handleNameChange = (e) => {
+    setName(e.target.value);
+  };
+
+  const handleEmailChange = (e) => {
+    setEmail(e.target.value);
+  };
+
   const handleSelectMonth = (e) => {
     let monthId = e.target.value;
     const result = months.find(({ id }) => id === parseInt(monthId));
@@ -93,15 +104,29 @@ const Signup = () => {
   };
 
   const handleSelectYear = (e) => {
-    setDay(e.target.value);
+    setYear(e.target.value);
   };
+
+  useEffect(() => {
+    if (
+      name !== "" &&
+      email !== "" &&
+      month.id !== "" &&
+      day !== "" &&
+      year !== ""
+    ) {
+      setInvalidForm(false);
+    } else {
+      setInvalidForm(true);
+    }
+  }, [name, email, month, day, year]);
 
   const dayOptions = [];
   for (let i = 1; i <= month.days; i++) {
     dayOptions.push(
       <option key={i} value={i}>
         {i}
-      </option>
+      </option>,
     );
   }
 
@@ -112,7 +137,7 @@ const Signup = () => {
     yearOptions.push(
       <option key={year} value={year}>
         {year}
-      </option>
+      </option>,
     );
   }
 
@@ -122,6 +147,7 @@ const Signup = () => {
       <PrimaryButton
         htmlAttributes={{
           onClick: openModal,
+          id: "btn-signup",
           className: "w-[300px] text-sm py-2",
         }}
         text="Buat akun"
@@ -129,13 +155,13 @@ const Signup = () => {
 
       {/* Modal */}
       {isOpen && (
-        <div className="fixed inset-0 z-50 flex justify-center items-center">
+        <div className="fixed inset-0 z-50 flex items-center justify-center">
           {/* Overlay */}
           <div className="fixed inset-0 bg-black opacity-50"></div>
 
-          <div className="bg-white rounded-none sm:rounded-2xl shadow-lg fixed transform transition-all duration-300 w-full sm:w-[600px] sm:h-[580px] h-screen">
+          <div className="fixed h-screen w-full transform rounded-none bg-white shadow-lg transition-all duration-300 sm:h-[580px] sm:w-[600px] sm:rounded-2xl">
             {/* Modal Header */}
-            <div className="flex items-start justify-between h-14 p-2">
+            <div className="flex h-14 items-start justify-between p-2">
               <CloseModal closeModal={closeModal} />
               <Image
                 src="/x2.png"
@@ -144,25 +170,28 @@ const Signup = () => {
                 alt="X2"
                 priority
                 className="mx-auto"
+                style={{ width: "auto", height: "auto" }}
               />
             </div>
             {/* Modal Body */}
-            <div className="flex flex-col gap-2 pt-8 px-20 h-full max-h-[424] overflow-x-hidden overflow-y-auto">
-              <h5 className="text-3xl font-extrabold mb-4">Buat akun</h5>
+            <div className="flex h-full max-h-[424] flex-col gap-2 overflow-y-auto overflow-x-hidden px-20 pt-8">
+              <h5 className="mb-4 text-3xl font-extrabold">Buat akun</h5>
 
               {/* Floating input name */}
-              <div className="flex items-center mb-2">
+              <div className="mb-2 flex items-center">
                 <div className="relative w-full overflow-x-hidden">
                   <input
                     id="inputName"
                     type="text"
                     placeholder=" "
                     autoComplete="off"
-                    className="floating-label-input w-full h-[58px] block px-2 pt-4 text-sm bg-transparent border rounded-md appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 focus:border-2 border-gray-200 text-black"
+                    className="floating-label-input block h-[58px] w-full appearance-none rounded-md border border-gray-200 bg-transparent px-2 pt-4 text-sm text-black focus:border-2 focus:border-blue-600 focus:outline-none focus:ring-0"
+                    onChange={handleNameChange}
+                    value={name}
                   />
                   <label
                     htmlFor="inputName"
-                    className="absolute duration-300 truncate text-md left-2 top-4 -z-1 origin-0 text-gray-500 font-extralight"
+                    className="text-md -z-1 origin-0 absolute left-2 top-4 truncate font-extralight text-gray-500 duration-300"
                   >
                     Nama
                   </label>
@@ -170,18 +199,20 @@ const Signup = () => {
               </div>
 
               {/* Floating input email */}
-              <div className="flex items-center mb-2">
+              <div className="mb-2 flex items-center">
                 <div className="relative w-full overflow-x-hidden">
                   <input
                     id="inputEmail"
                     type="email"
                     placeholder=" "
                     autoComplete="off"
-                    className="floating-label-input w-full h-[58px] block px-2 pt-4 text-sm bg-transparent border rounded-md appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 focus:border-2 border-gray-200 text-black"
+                    className="floating-label-input block h-[58px] w-full appearance-none rounded-md border border-gray-200 bg-transparent px-2 pt-4 text-sm text-black focus:border-2 focus:border-blue-600 focus:outline-none focus:ring-0"
+                    onChange={handleEmailChange}
+                    value={email}
                   />
                   <label
                     htmlFor="inputEmail"
-                    className="absolute duration-300 truncate text-md left-2 top-4 -z-1 origin-0 text-gray-500 font-extralight"
+                    className="text-md -z-1 origin-0 absolute left-2 top-4 truncate font-extralight text-gray-500 duration-300"
                   >
                     Email
                   </label>
@@ -196,14 +227,14 @@ const Signup = () => {
                 peliharaan, atau tujuan lainnya.
               </p>
 
-              <div className="flex items-center justify-between gap-2 mb-2">
-                <div className="relative grow mb-4">
+              <div className="mb-2 flex items-center justify-between gap-2">
+                <div className="relative mb-4 grow">
                   <select
                     value={month.id}
                     onChange={handleSelectMonth}
-                    className="floating-label-input w-full h-[58px] block px-2 pt-4 text-sm bg-transparent border rounded-md appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 focus:border-2 border-gray-200 text-black"
+                    className="floating-label-input block h-[58px] w-full appearance-none rounded-md border border-gray-200 bg-transparent px-2 pt-4 text-sm text-black focus:border-2 focus:border-blue-600 focus:outline-none focus:ring-0"
                   >
-                    <option value={null} selected disabled></option>
+                    <option value="" disabled></option>
                     {months &&
                       months.map((item, index) => {
                         return (
@@ -215,39 +246,39 @@ const Signup = () => {
                   </select>
                   <label
                     htmlFor="credential"
-                    className="absolute duration-300 truncate text-md left-2 top-4 -z-1 origin-0 text-gray-500 font-extralight"
+                    className="text-md -z-1 origin-0 absolute left-2 top-4 truncate font-extralight text-gray-500 duration-300"
                   >
                     Bulan
                   </label>
                 </div>
-                <div className="relative flex-1 mb-4">
+                <div className="relative mb-4 flex-1">
                   <select
                     value={day}
                     onChange={handleSelectDay}
-                    className="floating-label-input w-full h-[58px] block px-2 pt-4 text-sm bg-transparent border rounded-md appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 focus:border-2 border-gray-200 text-black"
+                    className="floating-label-input block h-[58px] w-full appearance-none rounded-md border border-gray-200 bg-transparent px-2 pt-4 text-sm text-black focus:border-2 focus:border-blue-600 focus:outline-none focus:ring-0"
                   >
-                    <option value={null} selected disabled></option>
+                    <option value="" disabled></option>
                     {dayOptions}
                   </select>
                   <label
                     htmlFor="credential"
-                    className="absolute duration-300 truncate text-md left-2 top-4 -z-1 origin-0 text-gray-500 font-extralight"
+                    className="text-md -z-1 origin-0 absolute left-2 top-4 truncate font-extralight text-gray-500 duration-300"
                   >
                     Hari
                   </label>
                 </div>
-                <div className="relative flex-1 mb-4">
+                <div className="relative mb-4 flex-1">
                   <select
                     value={year}
                     onChange={handleSelectYear}
-                    className="floating-label-input w-full h-[58px] block px-2 pt-4 text-sm bg-transparent border rounded-md appearance-none focus:outline-none focus:ring-0 focus:border-blue-600 focus:border-2 border-gray-200 text-black"
+                    className="floating-label-input block h-[58px] w-full appearance-none rounded-md border border-gray-200 bg-transparent px-2 pt-4 text-sm text-black focus:border-2 focus:border-blue-600 focus:outline-none focus:ring-0"
                   >
-                    <option value={null} selected disabled></option>
+                    <option value="" disabled></option>
                     {yearOptions}
                   </select>
                   <label
                     htmlFor="credential"
-                    className="absolute duration-300 truncate text-md left-2 top-4 -z-1 origin-0 text-gray-500 font-extralight"
+                    className="text-md -z-1 origin-0 absolute left-2 top-4 truncate font-extralight text-gray-500 duration-300"
                   >
                     Tahun
                   </label>
@@ -255,10 +286,10 @@ const Signup = () => {
               </div>
             </div>
             {/* Modal Footer */}
-            <div className="fixed bottom-0 w-full h-[100px] px-20 flex justify-center items-center border-t py-2 border-gray-300">
+            <div className="fixed bottom-0 flex h-[100px] w-full items-center justify-center border-t border-gray-300 px-20 py-2">
               <PrimaryButton
                 htmlAttributes={{
-                  disabled: true,
+                  disabled: invalidForm,
                   className: "w-full h-14 py-3",
                 }}
                 text="Berikutnya"
